@@ -32,11 +32,19 @@ class CarController extends Controller
             'fuel_type' => 'required|in:essence,diesel,hybride,électrique',
             'transmission' => 'required|in:manuelle,automatique',
             'description' => 'nullable|string',
+            'images.*' => 'nullable|image|max:4096',
         ]);
 
         $validated['user_id'] = auth()->id();
 
-        Car::create($validated);
+        $car = Car::create($validated);
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('cars', 'public');
+                $car->images()->create(['path' => $path]);
+            }
+        }
 
         return redirect()->route('cars.index')->with('success', 'Voiture ajoutée avec succès !');
     }

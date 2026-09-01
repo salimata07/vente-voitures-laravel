@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('cars.store') }}">
+    <form method="POST" action="{{ route('cars.store') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="row">
@@ -67,6 +67,12 @@
         <div class="mb-3">
             <label class="form-label">Description</label>
             <textarea name="description" class="form-control" rows="4">{{ old('description') }}</textarea>
+        </div>
+
+                <div class="mb-3">
+            <label class="form-label">Photos (plusieurs possibles)</label>
+            <input type="file" name="images[]" class="form-control" multiple accept="image/*">
+            <small class="text-muted">Formats acceptés : JPG, PNG. Tu peux sélectionner plusieurs fichiers.</small>
         </div>
 
         <button type="submit" class="btn btn-primary">Publier l'annonce</button>

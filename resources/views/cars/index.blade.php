@@ -17,6 +17,13 @@
         @forelse($cars as $car)
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
+                    @if($car->images->first())
+                        <img src="{{ asset('storage/' . $car->images->first()->path) }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    @else
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="text-muted">Pas de photo</span>
+                        </div>
+                    @endif
                     <div class="card-body">
                         <span class="badge bg-{{ $car->status === 'disponible' ? 'success' : 'secondary' }} mb-2">
                             {{ ucfirst($car->status) }}
