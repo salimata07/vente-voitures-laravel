@@ -37,6 +37,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('cars.create') }}">Ajouter une voiture</a>
                             </li>
+                            @if(auth()->user()->role === 'admin')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('admin.dashboard') }}">📊 Dashboard</a>
+                                </li>
+                            @endif
                         @endauth
                     </ul>
 
