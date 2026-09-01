@@ -8,9 +8,28 @@ use Illuminate\Http\Request;
 class CarController extends Controller
 {
     // Affiche la liste de toutes les voitures
-    public function index()
+    public function index(Request $request)
     {
-        $cars = Car::latest()->paginate(9);
+        $query = Car::query();
+
+        if ($request->filled('brand')) {
+            $query->where('brand', 'like', '%' . $request->brand . '%');
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        if ($request->filled('fuel_type')) {
+            $query->where('fuel_type', $request->fuel_type);
+        }
+
+        $cars = $query->latest()->paginate(9)->withQueryString();
+
         return view('cars.index', compact('cars'));
     }
 

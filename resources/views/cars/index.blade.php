@@ -13,6 +13,32 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+        <form method="GET" action="{{ route('cars.index') }}" class="card p-3 mb-4 shadow-sm">
+        <div class="row g-2">
+            <div class="col-md-3">
+                <input type="text" name="brand" class="form-control" placeholder="Marque " value="{{ request('brand') }}">
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="min_price" class="form-control" placeholder="Prix min" value="{{ request('min_price') }}">
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="max_price" class="form-control" placeholder="Prix max" value="{{ request('max_price') }}">
+            </div>
+            <div class="col-md-3">
+                <select name="fuel_type" class="form-select">
+                    <option value="">Tous les carburants</option>
+                    <option value="essence" {{ request('fuel_type') === 'essence' ? 'selected' : '' }}>Essence</option>
+                    <option value="diesel" {{ request('fuel_type') === 'diesel' ? 'selected' : '' }}>Diesel</option>
+                    <option value="hybride" {{ request('fuel_type') === 'hybride' ? 'selected' : '' }}>Hybride</option>
+                    <option value="électrique" {{ request('fuel_type') === 'électrique' ? 'selected' : '' }}>Électrique</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+            </div>
+        </div>
+    </form>
+
     <div class="row">
         @forelse($cars as $car)
             <div class="col-md-4 mb-4">
