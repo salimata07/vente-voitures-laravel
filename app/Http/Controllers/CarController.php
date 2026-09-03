@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Car;
 use Illuminate\Http\Request;
+use App\Models\CarImage;
+use Illuminate\Support\Facades\Storage;
 
 class CarController extends Controller
 {
@@ -93,11 +95,31 @@ class CarController extends Controller
             'transmission' => 'required|in:manuelle,automatique',
             'description' => 'nullable|string',
             'status' => 'required|in:disponible,vendu',
+            'images.*' => 'nullable|image|max:4096',
         ]);
 
         $car->update($validated);
 
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('cars', 'public');
+                $car->images()->create(['path' => $path]);
+            }
+        }
+
         return redirect()->route('cars.index')->with('success', 'Voiture mise à jour !');
+    }
+
+    public function destroyImage(Car $car, CarImage $image)
+    {
+        if ($image->car_id !== $car->id) {
+            abort(403);
+        }
+
+        Storage::disk('public')->delete($image->path);
+        $image->delete();
+
+        return back()->with('success', 'Photo supprimée !');
     }
 
     // Supprime une voiture

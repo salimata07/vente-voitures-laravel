@@ -70,6 +70,12 @@
                             <button type="submit" class="btn btn-danger">Supprimer</button>
                         </form>
                     </div>
+                @elseif($car->status === 'disponible')
+                    <form action="{{ route('orders.store', $car) }}" method="POST" class="mt-3"
+                          onsubmit="return confirm('Confirmer l\'achat de cette voiture ?');">
+                        @csrf
+                        <button type="submit" class="btn btn-success btn-lg">💳 Acheter maintenant</button>
+                    </form>
                 @endif
             @endauth
         </div>

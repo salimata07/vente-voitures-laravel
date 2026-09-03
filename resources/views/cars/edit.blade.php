@@ -14,7 +14,29 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('cars.update', $car) }}">
+    @if($car->images->count())
+    <div class="mb-4">
+        <label class="form-label">Photos actuelles</label>
+        <div class="row">
+            @foreach($car->images as $image)
+                <div class="col-md-3 mb-2">
+                    <div class="position-relative">
+                        <img src="{{ asset('storage/' . $image->path) }}" class="img-fluid rounded" style="height: 100px; width: 100%; object-fit: cover;">
+                        <form action="{{ route('cars.images.destroy', [$car, $image]) }}" method="POST"
+                              onsubmit="return confirm('Supprimer cette photo ?');"
+                              class="position-absolute top-0 end-0">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">✕</button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    <form method="POST" action="{{ route('cars.update', $car) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -80,6 +102,11 @@
         <div class="mb-3">
             <label class="form-label">Description</label>
             <textarea name="description" class="form-control" rows="4">{{ old('description', $car->description) }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ajouter de nouvelles photos</label>
+            <input type="file" name="images[]" class="form-control" multiple accept="image/*">
         </div>
 
         <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
